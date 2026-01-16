@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <div class="logo-icon">💳</div>
+        <span>CreditPro</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Главная</a></li>
+        <li><a href="/calculator">Калькулятор</a></li>
+        <li><a href="/clients">Клиенты</a></li>
+        <li><a href="/credits" class="active">Кредиты</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <div class="page-header">
+      <h1>Кредиты</h1>
+      <a href="/credits/new" class="btn btn-primary">Оформить кредит</a>
+    </div>
+
+    <% if (credits.length === 0) { %>
+      <div class="empty-state">
+        <p>Кредиты не найдены</p>
+        <a href="/credits/new" class="btn">Оформить первый кредит</a>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Клиент</th>
+              <th>Тип кредита</th>
+              <th>Сумма</th>
+              <th>Ставка</th>
+              <th>Срок</th>
+              <th>Ежемесячный платеж</th>
+              <th>Статус</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% credits.forEach(credit => { %>
+              <tr>
+                <td><%= credit.client.lastName %> <%= credit.client.firstName %></td>
+                <td>
+                  <%
+                    const typeMap = {
+                      'consumer': 'Потребительский',
+                      'mortgage': 'Ипотека',
+                      'car': 'Автокредит',
+                      'business': 'Бизнес'
+                    };
+                  %>
+                  <%= typeMap[credit.creditType] %>
+                </td>
+                <td><%= credit.amount.toLocaleString() %> сум</td>
+                <td><%= credit.interestRate %>%</td>
+                <td><%= credit.termMonths %> мес.</td>
+                <td><%= credit.monthlyPayment.toLocaleString() %> сум</td>
+                <td>
+                  <%
+                    const statusMap = {
+                      'active': 'Активный',
+                      'closed': 'Закрыт',
+                      'overdue': 'Просрочен'
+                    };
+                  %>
+                  <span class="status-badge status-<%= credit.status %>">
+                    <%= statusMap[credit.status] %>
+                  </span>
+                </td>
+                <td class="actions">
+                  <a href="/credits/<%= credit._id %>" class="btn-small">Просмотр</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 CreditPro. Система управления кредитами.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <div class="logo-icon">💳</div>
+        <span>CreditPro</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Главная</a></li>
+        <li><a href="/calculator">Калькулятор</a></li>
+        <li><a href="/clients">Клиенты</a></li>
+        <li><a href="/credits" class="active">Кредиты</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <div class="page-header">
+      <h1>Детали кредита</h1>
+      <form action="/credits/<%= credit._id %>?_method=DELETE" method="POST" style="display: inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены?')">Удалить кредит</button>
+      </form>
+    </div>
+
+    <div class="detail-card">
+      <h2>Информация о клиенте</h2>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">ФИО:</span>
+          <span class="value">
+            <a href="/clients/<%= credit.client._id %>">
+              <%= credit.client.lastName %> <%= credit.client.firstName %> <%= credit.client.middleName || '' %>
+            </a>
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Телефон:</span>
+          <span class="value"><%= credit.client.phoneNumber %></span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Email:</span>
+          <span class="value"><%= credit.client.email %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h2>Параметры кредита</h2>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">Тип кредита:</span>
+          <span class="value">
+            <%
+              const typeMap = {
+                'consumer': 'Потребительский',
+                'mortgage': 'Ипотека',
+                'car': 'Автокредит',
+                'business': 'Бизнес'
+              };
+            %>
+            <%= typeMap[credit.creditType] %>
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Сумма кредита:</span>
+          <span class="value"><%= credit.amount.toLocaleString() %> сум</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Процентная ставка:</span>
+          <span class="value"><%= credit.interestRate %>%</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Срок кредита:</span>
+          <span class="value"><%= credit.termMonths %> месяцев</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Тип платежа:</span>
+          <span class="value"><%= credit.paymentType === 'annuity' ? 'Аннуитетный' : 'Дифференцированный' %></span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Статус:</span>
+          <span class="value">
+            <%
+              const statusMap = {
+                'active': 'Активный',
+                'closed': 'Закрыт',
+                'overdue': 'Просрочен'
+              };
+            %>
+            <span class="status-badge status-<%= credit.status %>">
+              <%= statusMap[credit.status] %>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h2>Финансовые показатели</h2>
+      <div class="detail-grid highlight">
+        <div class="detail-item">
+          <span class="label">Ежемесячный платеж:</span>
+          <span class="value"><%= credit.monthlyPayment.toLocaleString() %> сум</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Общая сумма выплат:</span>
+          <span class="value"><%= credit.totalPayment.toLocaleString() %> сум</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Переплата:</span>
+          <span class="value"><%= credit.totalInterest.toLocaleString() %> сум</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Дата начала:</span>
+          <span class="value"><%= new Date(credit.startDate).toLocaleDateString('ru-RU') %></span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Дата окончания:</span>
+          <span class="value"><%= new Date(credit.endDate).toLocaleDateString('ru-RU') %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h2>График платежей</h2>
+      <div class="table-container">
+        <table class="payment-table">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Дата платежа</th>
+              <th>Платеж</th>
+              <th>Основной долг</th>
+              <th>Проценты</th>
+              <th>Остаток</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% payments.forEach(payment => { %>
+              <tr>
+                <td><%= payment.paymentNumber %></td>
+                <td><%= new Date(payment.paymentDate).toLocaleDateString('ru-RU') %></td>
+                <td><%= payment.totalAmount.toLocaleString() %> сум</td>
+                <td><%= payment.principalAmount.toLocaleString() %> сум</td>
+                <td><%= payment.interestAmount.toLocaleString() %> сум</td>
+                <td><%= payment.remainingBalance.toLocaleString() %> сум</td>
+                <td>
+                  <% if (payment.isPaid) { %>
+                    <span class="status-badge status-paid">Оплачен</span>
+                  <% } else { %>
+                    <span class="status-badge status-pending">Ожидает</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <a href="/credits" class="btn btn-secondary">Назад к списку</a>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 CreditPro. Система управления кредитами.</p>
+    </div>
+  </footer>
+</body>
+</html>

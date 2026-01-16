@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <div class="logo-icon">💳</div>
+        <span>CreditPro</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Главная</a></li>
+        <li><a href="/calculator">Калькулятор</a></li>
+        <li><a href="/clients">Клиенты</a></li>
+        <li><a href="/credits" class="active">Кредиты</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <h1>Оформить новый кредит</h1>
+
+    <div class="form-container">
+      <form action="/credits" method="POST">
+        <div class="form-group">
+          <label for="client">Клиент:</label>
+          <select id="client" name="client" required>
+            <option value="">Выберите клиента</option>
+            <% clients.forEach(client => { %>
+              <option value="<%= client._id %>">
+                <%= client.lastName %> <%= client.firstName %> <%= client.middleName || '' %> - <%= client.passportSeries %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="creditType">Тип кредита:</label>
+          <select id="creditType" name="creditType" required>
+            <option value="consumer">Потребительский</option>
+            <option value="mortgage">Ипотека</option>
+            <option value="car">Автокредит</option>
+            <option value="business">Бизнес</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="amount">Сумма кредита (сум):</label>
+            <input type="number" id="amount" name="amount" required min="1000000" step="100000" value="10000000">
+          </div>
+
+          <div class="form-group">
+            <label for="interestRate">Годовая процентная ставка (%):</label>
+            <input type="number" id="interestRate" name="interestRate" required min="0" max="100" step="0.1" value="20">
+          </div>
+
+          <div class="form-group">
+            <label for="termMonths">Срок кредита (месяцев):</label>
+            <input type="number" id="termMonths" name="termMonths" required min="1" max="360" value="12">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentType">Тип платежа:</label>
+          <select id="paymentType" name="paymentType" required>
+            <option value="annuity">Аннуитетный</option>
+            <option value="differentiated">Дифференцированный</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Оформить кредит</button>
+          <a href="/credits" class="btn btn-secondary">Отмена</a>
+        </div>
+      </form>
+    </div>
+
+    <% if (clients.length === 0) { %>
+      <div class="info-box warning">
+        <p>Внимание: В системе нет клиентов. Сначала добавьте клиента.</p>
+        <a href="/clients/new" class="btn">Добавить клиента</a>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 CreditPro. Система управления кредитами.</p>
+    </div>
+  </footer>
+</body>
+</html>

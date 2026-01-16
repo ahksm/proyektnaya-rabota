@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <div class="logo-icon">💳</div>
+        <span>CreditPro</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Главная</a></li>
+        <li><a href="/calculator" class="active">Калькулятор</a></li>
+        <li><a href="/clients">Клиенты</a></li>
+        <li><a href="/credits">Кредиты</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <h1>Результат расчета</h1>
+
+    <div class="result-summary">
+      <h2>Параметры кредита</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Сумма кредита:</span>
+          <span class="value"><%= result.amount.toLocaleString() %> сум</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Процентная ставка:</span>
+          <span class="value"><%= result.interestRate %>%</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Срок кредита:</span>
+          <span class="value"><%= result.termMonths %> мес.</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Тип платежа:</span>
+          <span class="value"><%= result.paymentType === 'annuity' ? 'Аннуитетный' : 'Дифференцированный' %></span>
+        </div>
+      </div>
+
+      <h2>Итоговые показатели</h2>
+      <div class="summary-grid highlight">
+        <div class="summary-item">
+          <span class="label">Ежемесячный платеж:</span>
+          <span class="value"><%= result.monthlyPayment.toLocaleString() %> сум</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Общая сумма выплат:</span>
+          <span class="value"><%= result.totalPayment.toLocaleString() %> сум</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Переплата:</span>
+          <span class="value"><%= result.totalInterest.toLocaleString() %> сум</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Процент переплаты:</span>
+          <span class="value"><%= ((result.totalInterest / result.amount) * 100).toFixed(2) %>%</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>График платежей</h2>
+    <div class="table-container">
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>Месяц</th>
+            <th>Платеж</th>
+            <th>Основной долг</th>
+            <th>Проценты</th>
+            <th>Остаток долга</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% result.schedule.forEach(payment => { %>
+            <tr>
+              <td><%= payment.month %></td>
+              <td><%= payment.monthlyPayment.toLocaleString() %> сум</td>
+              <td><%= payment.principalAmount.toLocaleString() %> сум</td>
+              <td><%= payment.interestAmount.toLocaleString() %> сум</td>
+              <td><%= payment.remainingBalance.toLocaleString() %> сум</td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="action-buttons">
+      <a href="/calculator" class="btn">Новый расчет</a>
+      <a href="/" class="btn btn-secondary">На главную</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 CreditPro. Система управления кредитами.</p>
+    </div>
+  </footer>
+</body>
+</html>

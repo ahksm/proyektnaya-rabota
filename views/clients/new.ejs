@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <div class="logo-icon">💳</div>
+        <span>CreditPro</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Главная</a></li>
+        <li><a href="/calculator">Калькулятор</a></li>
+        <li><a href="/clients" class="active">Клиенты</a></li>
+        <li><a href="/credits">Кредиты</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <h1>Добавить нового клиента</h1>
+
+    <div class="form-container">
+      <form action="/clients" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="lastName">Фамилия:</label>
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="firstName">Имя:</label>
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="middleName">Отчество:</label>
+            <input type="text" id="middleName" name="middleName">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="passportSeries">Серия и номер паспорта:</label>
+            <input type="text" id="passportSeries" name="passportSeries" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Телефон:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Адрес:</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="monthlyIncome">Ежемесячный доход (сум):</label>
+            <input type="number" id="monthlyIncome" name="monthlyIncome" required min="0">
+          </div>
+
+          <div class="form-group">
+            <label for="employmentStatus">Статус занятости:</label>
+            <select id="employmentStatus" name="employmentStatus" required>
+              <option value="employed">Работает</option>
+              <option value="self-employed">Самозанятый</option>
+              <option value="unemployed">Безработный</option>
+              <option value="retired">Пенсионер</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Сохранить</button>
+          <a href="/clients" class="btn btn-secondary">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 CreditPro. Система управления кредитами.</p>
+    </div>
+  </footer>
+</body>
+</html>
